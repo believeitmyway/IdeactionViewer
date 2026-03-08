@@ -5,7 +5,8 @@ import { useInView } from "react-intersection-observer";
 import { useAuth } from "@/lib/AuthContext";
 import FolderPicker from "@/components/FolderPicker";
 import { fetchMarkdownFiles, fetchFileContent, DriveFile } from "@/lib/driveApi";
-import { FileText, Loader2, FolderOpen, LogOut } from "lucide-react";
+import { FileText, Loader2, FolderOpen, LogOut, Settings as SettingsIcon } from "lucide-react";
+import SettingsModal from "@/components/SettingsModal";
 
 export default function Home() {
   const { isSignedIn, login, logout, accessToken } = useAuth();
@@ -16,6 +17,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [nextPageToken, setNextPageToken] = useState<string | undefined>(undefined);
   const [hasMore, setHasMore] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -87,11 +89,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="text-indigo-400 w-6 h-6" />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              MD Viewer
+            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent hidden sm:block">
+              Drive MD Viewer
             </h1>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="text-gray-400 hover:text-white transition-colors"
+              title="設定"
+            >
+              <SettingsIcon className="w-5 h-5" />
+            </button>
             {!isSignedIn ? (
               <button
                 onClick={() => login()}
@@ -207,6 +216,11 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 }
