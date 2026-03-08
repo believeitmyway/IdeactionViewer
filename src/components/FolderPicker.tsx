@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/AuthContext";
+import { useSettings } from "@/lib/SettingsContext";
 
 interface FolderPickerProps {
   onFolderSelected: (folderId: string, folderName: string) => void;
@@ -8,7 +9,8 @@ interface FolderPickerProps {
 
 export default function FolderPicker({ onFolderSelected }: FolderPickerProps) {
   const { accessToken, isGapiLoaded } = useAuth();
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "";
+  const { settings } = useSettings();
+  const apiKey = settings.apiKey;
 
   const handleOpenPicker = () => {
     if (!isGapiLoaded || !window.google || !window.google.picker) {
